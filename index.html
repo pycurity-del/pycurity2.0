@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Control ESP32 MQTT</title>
+
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 50px;
+            background: #202020;
+            color: white;
+        }
+
+        button {
+            width: 220px;
+            height: 70px;
+            font-size: 22px;
+            margin: 20px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .on {
+            background: green;
+            color: white;
+        }
+
+        .off {
+            background: red;
+            color: white;
+        }
+
+        #estado {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<h1>Control LED ESP32</h1>
+
+<button class="on" onclick="encender()">
+ENCENDER LED
+</button>
+
+<br>
+
+<button class="off" onclick="apagar()">
+APAGAR LED
+</button>
+
+
+<div id="estado">
+Conectando MQTT...
+</div>
+
+
+<script>
+
+const broker = "wss://broker.hivemq.com:8884/mqtt";
+
+const topic = "py-curity/cicla";
+
+
+const cliente = mqtt.connect(broker);
+
+
+cliente.on("connect", function(){
+
+    document.getElementById("estado").innerHTML =
+    "MQTT conectado ✅";
+
+});
+
+
+cliente.on("error", function(){
+
+    document.getElementById("estado").innerHTML =
+    "Error MQTT ❌";
+
+});
+
+
+
+function enviar(valor){
+
+    cliente.publish(
+        topic,
+        valor
+    );
+
+
+    document.getElementById("estado").innerHTML =
+    "Enviado: " + valor;
+
+}
+
+
+
+function encender(){
+
+    enviar("1");
+
+}
+
+
+
+function apagar(){
+
+    enviar("0");
+
+}
+
+
+</script>
+
+
+</body>
+</html>
